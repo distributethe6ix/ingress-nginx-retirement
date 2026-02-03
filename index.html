@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Security headers such as X-Content-Type-Options, X-Frame-Options, and Content-Security-Policy
+         must be configured as HTTP response headers on the server. For reference, the intended CSP is:
+         default-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline';
+         img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; -->
+    <meta name="referrer" content="no-referrer">
     <title>Ingress NGINX Retirement Countdown</title>
     <style>
         * {
@@ -104,10 +109,36 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
+
+        .resources {
+            margin-top: 40px;
+            font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+            color: #aa4444;
+        }
+
+        .resources a {
+            color: #ff6666;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .resources a:hover {
+            color: #ff9999;
+            text-decoration: underline;
+        }
+
+        .resources ul {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .resources li {
+            margin: 8px 0;
+        }
     </style>
 </head>
 <body>
-    <h1>⚠️ Ingress NGINX Retirement ⚠️</h1>
+    <h1>Ingress NGINX Retirement</h1>
     <p class="warning">MIGRATE NOW - TIME IS RUNNING OUT</p>
 
     <div id="countdown" class="countdown">
@@ -129,34 +160,57 @@
         </div>
     </div>
 
-    <p class="deadline">HARD DEADLINE: March 1st, 2025 at 12:00 AM</p>
+    <p class="deadline">HARD DEADLINE: March 1st, 2025 at 12:00 AM UTC</p>
+
+    <div class="resources">
+        <p>Learn more about the retirement:</p>
+        <ul>
+            <li><a href="https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/" target="_blank" rel="noopener noreferrer">Kubernetes Blog: Ingress NGINX Retirement Announcement</a></li>
+            <li><a href="https://konghq.com/blog/engineering/nginx-depreciation-migrating-with-kong" target="_blank" rel="noopener noreferrer">Kong Blog: Migrating from NGINX to Kong</a></li>
+        </ul>
+    </div>
 
     <script>
-        const retirementDate = new Date('2025-03-01T00:00:00').getTime();
+        (function() {
+            'use strict';
 
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = retirementDate - now;
+            const RETIREMENT_DATE = Date.UTC(2025, 2, 1, 0, 0, 0);
 
-            if (distance < 0) {
-                document.getElementById('countdown').innerHTML =
-                    '<div class="expired blink">INGRESS NGINX HAS BEEN RETIRED</div>';
-                return;
+            const elements = {
+                days: document.getElementById('days'),
+                hours: document.getElementById('hours'),
+                minutes: document.getElementById('minutes'),
+                seconds: document.getElementById('seconds'),
+                countdown: document.getElementById('countdown')
+            };
+
+            function updateCountdown() {
+                const now = Date.now();
+                const distance = RETIREMENT_DATE - now;
+
+                if (distance < 0) {
+                    const expiredDiv = document.createElement('div');
+                    expiredDiv.className = 'expired blink';
+                    expiredDiv.textContent = 'INGRESS NGINX HAS BEEN RETIRED';
+                    elements.countdown.innerHTML = '';
+                    elements.countdown.appendChild(expiredDiv);
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                elements.days.textContent = String(days).padStart(2, '0');
+                elements.hours.textContent = String(hours).padStart(2, '0');
+                elements.minutes.textContent = String(minutes).padStart(2, '0');
+                elements.seconds.textContent = String(seconds).padStart(2, '0');
             }
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-        }
-
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        })();
     </script>
 </body>
 </html>
