@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingress NGINX Retirement Countdown</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #1a0000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ff0000;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .warning {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #ff3333;
+        }
+
+        .countdown {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .time-block {
+            background: linear-gradient(145deg, #2a0000, #400000);
+            border: 3px solid #ff0000;
+            border-radius: 10px;
+            padding: 20px 30px;
+            min-width: 120px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+        }
+
+        .time-value {
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            font-weight: 900;
+            line-height: 1;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+        }
+
+        .time-label {
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 10px;
+            color: #ff6666;
+        }
+
+        .deadline {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-weight: 700;
+            color: #ff4444;
+            border: 2px solid #ff0000;
+            padding: 15px 30px;
+            border-radius: 5px;
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        .expired {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 900;
+            color: #ff0000;
+            text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <h1>⚠️ Ingress NGINX Retirement ⚠️</h1>
+    <p class="warning">MIGRATE NOW - TIME IS RUNNING OUT</p>
+
+    <div id="countdown" class="countdown">
+        <div class="time-block">
+            <div class="time-value" id="days">--</div>
+            <div class="time-label">Days</div>
+        </div>
+        <div class="time-block">
+            <div class="time-value" id="hours">--</div>
+            <div class="time-label">Hours</div>
+        </div>
+        <div class="time-block">
+            <div class="time-value" id="minutes">--</div>
+            <div class="time-label">Minutes</div>
+        </div>
+        <div class="time-block">
+            <div class="time-value" id="seconds">--</div>
+            <div class="time-label">Seconds</div>
+        </div>
+    </div>
+
+    <p class="deadline">HARD DEADLINE: March 1st, 2025 at 12:00 AM</p>
+
+    <script>
+        const retirementDate = new Date('2025-03-01T00:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = retirementDate - now;
+
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML =
+                    '<div class="expired blink">INGRESS NGINX HAS BEEN RETIRED</div>';
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
