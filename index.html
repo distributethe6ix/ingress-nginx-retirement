@@ -108,6 +108,32 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
+
+        .resources {
+            margin-top: 40px;
+            font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+            color: #aa4444;
+        }
+
+        .resources a {
+            color: #ff6666;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .resources a:hover {
+            color: #ff9999;
+            text-decoration: underline;
+        }
+
+        .resources ul {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .resources li {
+            margin: 8px 0;
+        }
     </style>
 </head>
 <body>
@@ -134,6 +160,14 @@
     </div>
 
     <p class="deadline">HARD DEADLINE: March 1st, 2025 at 12:00 AM UTC</p>
+
+    <div class="resources">
+        <p>Learn more about the retirement:</p>
+        <ul>
+            <li><a href="https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/" target="_blank" rel="noopener noreferrer">Kubernetes Blog: Ingress NGINX Retirement Announcement</a></li>
+            <li><a href="https://konghq.com/blog/engineering/nginx-depreciation-migrating-with-kong" target="_blank" rel="noopener noreferrer">Kong Blog: Migrating from NGINX to Kong</a></li>
+        </ul>
+    </div>
 
     <script>
         (function() {
